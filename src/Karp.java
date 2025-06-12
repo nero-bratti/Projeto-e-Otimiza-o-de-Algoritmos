@@ -1,81 +1,65 @@
 public class Karp {
-    static int iterações = 0;
+    int iterations;
+    int instructions;
 
-    public static void main(String[] args) {
-        String s1 = "ABCDCBDCBDACBDABDCBADF", s2 = "ADF";
-
-        System.out.println("\nImplementação com .regionMatches: ");
-        System.out.println(findOccurrenceWithRegionMatches(s1,s2));
-
-        System.out.println("\nImplementação com .equals: ");
-        System.out.println(findOccurrence(s1,s2));
-
-        System.out.println("\nImplementação com karp: ");
-        System.out.println(karp(s2,s1));
-
-        s1 = s1.substring(0,16).repeat(128) + s1.substring(19);
-
-        System.out.println("\nImplementação com .regionMatches: ");
-        System.out.println(findOccurrenceWithRegionMatches(s1,s2));
-
-        System.out.println("\nImplementação com .equals: ");
-        System.out.println(findOccurrence(s1,s2));
-
-        System.out.println("\nImplementação com karp: ");
-        System.out.println(karp(s2,s1));
+    void clear() {
+        iterations = 0;
+        instructions = 0;
     }
-    public static String findOccurrenceWithRegionMatches(String s1, String s2) {
-        iterações = 0;
+
+    public String findOccurrenceWithRegionMatches(String s1, String s2) {
+        iterations = 0;
         if (s1.contains(s2)) {
             for (int i = 0; i < s1.length() - 1; i++) {
-                iterações++;
+                iterations++;
                 if (s1.charAt(i) == s2.charAt(0)) {
                     if (s1.regionMatches(i,s2,0,s2.length())) return "Posição " + i
-                             + " e " + iterações + " iterações.";
+                             + " e " + iterations + " iterations.";
                 }
             }
         }
         return "Não encontrado";
     }
-    public static String findOccurrence(String s1, String s2) {
-        iterações = 0;
+    public String findOccurrence(String s1, String s2) {
+        iterations = 0;
         if (s1.contains(s2)) {
             for (int i = 0; i < s1.length() - 1; i++) {
-                iterações++;
+                iterations++;
                 if (s1.charAt(i) == s2.charAt(0)) {
                     if ((s1.substring(i)).equals(s2)) return "Posição " + i
-                            + " e " + iterações + " iterações.";
+                            + " e " + iterations + " iterations.";
                 }
             }
         }
         return "Não encontrado";
     }
-    private static String karp(String pat, String txt) {
-        iterações = 0;
+    public void karp(String pat, String txt) {
+        clear();        
+        long time = System.nanoTime();
+        iterations = 0;
         int m = pat.length();
         int n = txt.length();
         long patHash = horner(pat, m);
         long txtHash = horner(txt.substring(0,m), m);
-
+        instructions = 4;
         for (int i = 0; i <= n - m; i++) {
-            iterações++;
-            //txtHash = txtHash -
+            iterations++;
+            txtHash = horner(txt.substring(i, i + m), m);
+            instructions =+ 2;
             if (patHash == txtHash) {
                 if (pat.equals(txt.substring(i))) {
-                    return "Posição " + i
-                            + " e " + iterações + " iterações.";
+                    time = System.nanoTime() - time;
+                    System.out.println("Karp with txt size " + txt.length() + ": " + iterations + " iterations, " + instructions + 
+                            " instructions and " + time + " nanoseconds.");
                 }
             }
         }
-        return "Não encontrado";
     }
-    private static long betterHash() {
-        return 0;
-    }
-    private static long horner(String s, int m) {
+    public long horner(String s, int m) {
         long h = 0;
         for (int j = 0; j < m; j++) {
-            iterações++;
+            iterations++;
+            instructions++;
             h = (h * 5 + s.charAt(j)) % 11;
         }
         return h;

@@ -12,7 +12,14 @@ public class App {
 
         longString = longString.substring(0,16).repeat(2048) + longPattern;
 
+        Karp karp = new Karp();
+        karp.karp(pattern, ex3);
+        karp.karp(longPattern,longString);
+
         Knuth knuth = new Knuth();
+        knuth.KMPSearch(pattern, ex3);
         knuth.KMPSearch(longPattern,longString);
+
+        
     }
 }

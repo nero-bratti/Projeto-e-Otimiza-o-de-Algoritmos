@@ -8,7 +8,8 @@ class Knuth {
     }
 
     void KMPSearch(String pat, String txt) {
-        clear();
+        clear();        
+        long time = System.nanoTime();
         int M = pat.length();
         int N = txt.length();
 
@@ -31,8 +32,6 @@ class Knuth {
                 instructions += 3;
             }
             if (j == M) {
-                System.out.println("Found pattern "
-                        + "at index " + (i - j));
                 j = lps[j - 1];
                 instructions += 3;
             }
@@ -48,7 +47,9 @@ class Knuth {
                 instructions += 3;
             }
         }
-        System.out.println(iterations + " iterations and " + instructions + " instructions");
+        time = System.nanoTime() - time;
+        System.out.println("Knuth with txt size " + txt.length() + ": " + iterations + " iterations, " + instructions + 
+                            " instructions and " + time + " nanoseconds.");
     }
 
     void computeLPSArray(String pat, int M, int lps[]) {
